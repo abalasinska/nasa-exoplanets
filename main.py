@@ -1,16 +1,16 @@
-from fastapi import FastApi
+from fastapi import FastAPI
+import requests
 
-api = FastApi()
-
-api.get("/planets")
-
-
-def planets():
-    return "hello"
+api = FastAPI()
 
 
-api.get("/")
+@api.get("/planets")
+def planets(limit: int = 10):
+    url = f"https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+{limit}+pl_name,hostname,sy_snum,sy_pnum,st_mass+from+ps&format=json"
+    response = requests.get(url)
+    return response.json()
 
 
+@api.get("/")
 def x():
-    return "xyz"
+    return "Exoplanets API"
